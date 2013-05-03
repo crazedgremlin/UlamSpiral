@@ -24,7 +24,7 @@ function render() {
         console.log(ctx);
 
         // determine the largest visible square
-        var sideLength = Math.min(window.innerWidth, window.innerHeight);
+        var sideLength = Math.max(window.innerWidth, window.innerHeight) - 200;
         var w = sideLength;
         var h = sideLength;
         ctx.canvas.width = sideLength;
@@ -58,8 +58,11 @@ function render() {
         }
 
 
-        var x = w/2;
-        var y = h/2;
+        var x = Math.floor(w/2);
+        var y = Math.floor(h/2);
+
+        console.log("STARTING AT " + [x,y]);
+
         var direction = Direction.RIGHT;
         var maxSideLength = 0;
         var sideLength = 0;
@@ -68,26 +71,33 @@ function render() {
         var pixelCount = 1;
         while (pixelCount <= w*h) {
 
+            /*
             if (pixelCount % 1000 == 0) {
                 console.log( "Pixel count = " + pixelCount );
             }
+            */
 
             // how many divisors does this number have?
             var divCount = divisorCount(pixelCount);
 
 
-            // draw a black pixel
-            if (renderMode !== 'both')
-                setPixel(imgData, x, y, 0, 0, 0, 255);
+            // draw a black pixel by default
+            var color = [0, 0, 0];
 
             if (divCount == 0) { // it's prime!
-                if (renderMode !== 'composites')
-                    setPixel(imgData, x, y, 255, 0, 0, 255);
+
+                // if the render mode is either PRIMES or BOTH...
+                if (renderMode !== 'composites') {
+                    color = [0, 255, 0];
+                }
                 
             } else {
                 if (renderMode !== 'primes')
-                    setPixel(imgData, x, y, 0, 0, 1000*255.*divCount/pixelCount , 255);
+                    color = [0, 0, 1000*255.*divCount/pixelCount];
+
             }
+
+            setPixel(imgData, x, y, color[0], color[1], color[2], 255);
 
             pixelCount++;
 
