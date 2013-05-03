@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title>Ulam Spiral</title>
+
+        <script src="ulam.js"></script>
+
+        <script>
+            window.onload = function() {
+                //render();
+
+                var renderButton = document.getElementById("renderButton");
+                renderButton.onclick = render;
+            }
+        </script>
+
+        <style>
+            #ulamCanvas {
+                float:left;
+            }   
+            #controls {
+            }
+
+            .indented {
+                padding-left:5em;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <canvas id="ulamCanvas">
+            Ulam Spiral goes here
+        </canvas>
+
+        <div id="controls">
+
+            Render options
+            <div class="indented">
+                <input type="radio" name="renderLayers" value="primes" checked> Primes <br>
+                <input type="radio" name="renderLayers" value="composites"> Composites <br>
+                <input type="radio" name="renderLayers" value="both"> Both
+            </div>
+
+            <button id="renderButton">Ninja!</button>
+        </div>
+    </body>
+</html>
