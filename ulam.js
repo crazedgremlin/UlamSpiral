@@ -86,7 +86,7 @@ function render() {
                 
             } else {
                 if (renderMode !== 'primes')
-                    setPixel(imgData, x, y, 0, 0, 10000*255.*divCount/pixelCount , 255);
+                    setPixel(imgData, x, y, 0, 0, 1000*255.*divCount/pixelCount , 255);
             }
 
             pixelCount++;
