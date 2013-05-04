@@ -8,6 +8,8 @@ Render an Ulam Spiral
 
 function render() {
 
+    var SQUARE_SIZE = 3;
+
     // determine render mode chosen by user
     var renderMode = (function () {
         var radios = document.getElementsByName('renderLayers');
@@ -21,14 +23,15 @@ function render() {
     var canvas = document.getElementById('ulamCanvas');
     if (canvas.getContext){
         var ctx = canvas.getContext('2d');
-        console.log(ctx);
 
         // determine the largest visible square
-        var sideLength = Math.max(window.innerWidth, window.innerHeight) - 200;
-        var w = sideLength;
-        var h = sideLength;
-        ctx.canvas.width = sideLength;
-        ctx.canvas.height = sideLength;
+        var w, h;
+        w = h = Math.min(window.innerWidth, window.innerHeight) - 20;
+
+        var numSquares = w/SQUARE_SIZE;
+
+        ctx.canvas.width = w;
+        ctx.canvas.height = h;
 
         var imgData = ctx.createImageData(w, h);
 
@@ -57,10 +60,8 @@ function render() {
             }
         }
 
-
-        var x = Math.floor(w/2);
-        var y = Math.floor(h/2);
-
+        var x, y;
+        x = y =  Math.floor(numSquares/2);
         console.log("STARTING AT " + [x,y]);
 
         var direction = Direction.RIGHT;
@@ -69,35 +70,44 @@ function render() {
         var sideCount = 0;
 
         var pixelCount = 1;
-        while (pixelCount <= w*h) {
+        while (pixelCount <= numSquares*numSquares) {
 
-            /*
-            if (pixelCount % 1000 == 0) {
+            
+            if (pixelCount % 10 == 0) {
                 console.log( "Pixel count = " + pixelCount );
             }
-            */
+            
 
             // how many divisors does this number have?
             var divCount = divisorCount(pixelCount);
 
 
             // draw a black pixel by default
-            var color = [0, 0, 0];
+            //var color = [0, 0, 0];
+            ctx.fillStyle="#000";
 
             if (divCount == 0) { // it's prime!
 
                 // if the render mode is either PRIMES or BOTH...
                 if (renderMode !== 'composites') {
-                    color = [0, 255, 0];
+                    ctx.fillStyle="#005e61";
+                    ctx.fillRect(x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+                    //color = [0, 255, 0];
                 }
                 
             } else {
-                if (renderMode !== 'primes')
-                    color = [0, 0, 1000*255.*divCount/pixelCount];
+                if (renderMode !== 'primes') {
+                    ctx.fillStyle = "#00F";
+                    ctx.beginPath();
+                    ctx.arc(x*SQUARE_SIZE, y*SQUARE_SIZE, 0.1*divCount, 0, Math.PI*2);
+                    ctx.fill();
+                    //color = [0, 0, 1000*255.*divCount/pixelCount];
+                }
 
             }
 
-            setPixel(imgData, x, y, color[0], color[1], color[2], 255);
+            //setPixel(imgData, x, y, color[0], color[1], color[2], 255);
+
 
             pixelCount++;
 
@@ -127,7 +137,7 @@ function render() {
         }
 
         // copy image data back to canvas 
-        ctx.putImageData(imgData, 0, 0); 
+        //ctx.putImageData(imgData, 0, 0); 
         
     } else {
         alert("Canvas not supported. Get a better browser.");
